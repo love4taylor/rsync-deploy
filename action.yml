@@ -1,0 +1,9 @@
+name: 'Rsync Deploy'
+author: 'Love4Taylor'
+branding:
+  icon: 'archive'
+  color: 'yellow'
+description: 'Deploy file with rsync'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
