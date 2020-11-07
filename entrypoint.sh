@@ -28,6 +28,13 @@ if [ -n "${RSYNC_DEPLOY_KEY}" ]; then
     ssh-keyscan -t rsa ${RSYNC_HOST} > "${SSH_DIR}/known_hosts"
     echo "${RSYNC_DEPLOY_KEY}" > "${SSH_DIR}/id_rsa"
     chmod 400 "${SSH_DIR}/id_rsa"
+    if [ -n "${RSYNC_PORT}" ]; then
+        print_info "setup with ${RSYNC_PORT} port"
+        cat > ${SSH_DIR}/config <<-EOF
+Host ${RSYNC_HOST}
+    Port ${RSYNC_PORT}
+EOF
+    fi
 fi
 
 if [ -z "${RSYNC_ARG}" ]; then
