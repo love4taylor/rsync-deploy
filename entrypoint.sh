@@ -57,5 +57,8 @@ if [ -z "${RSYNC_DIST_DIR}" ]; then
     exit 1
 fi
 
-rsync ${RSYNC_ARG} ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR} && \
-print_info "${GITHUB_SHA} was successfully deployed"
+if [ -n "${RSYNC_PATH}" ]; then
+    rsync ${RSYNC_ARG} --rsync-path="${RSYNC_PATH}" ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR}
+else
+    rsync ${RSYNC_ARG} ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR}
+fi
