@@ -14,6 +14,10 @@ if [ -z "${RSYNC_HOST}" ]; then
     exit 1
 fi
 
+if [ -z "${RSYNC_PORT}" ]; then
+    export RSYNC_PORT=22
+fi
+
 if [ -n "${RSYNC_DEPLOY_KEY}" ]; then
 
     print_info "setup with RSYNC_DEPLOY_KEY"
@@ -25,7 +29,7 @@ if [ -n "${RSYNC_DEPLOY_KEY}" ]; then
         SSH_DIR="/root/.ssh"
     fi
     mkdir "${SSH_DIR}"
-    ssh-keyscan -t rsa ${RSYNC_HOST} > "${SSH_DIR}/known_hosts"
+    ssh-keyscan -t rsa -p ${RSYNC_PORT} ${RSYNC_HOST} > "${SSH_DIR}/known_hosts"
     echo "${RSYNC_DEPLOY_KEY}" > "${SSH_DIR}/id_rsa"
     chmod 400 "${SSH_DIR}/id_rsa"
 fi
@@ -48,10 +52,6 @@ fi
 if [ -z "${RSYNC_DIST_DIR}" ]; then
     print_error "not found RSYNC_DIST_DIR"
     exit 1
-fi
-
-if [ -z "${RSYNC_PORT}" ]; then
-    export RSYNC_PORT=22
 fi
 
 if [ -n "${RSYNC_PATH}" ]; then
