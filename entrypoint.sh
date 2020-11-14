@@ -28,13 +28,6 @@ if [ -n "${RSYNC_DEPLOY_KEY}" ]; then
     ssh-keyscan -t rsa ${RSYNC_HOST} > "${SSH_DIR}/known_hosts"
     echo "${RSYNC_DEPLOY_KEY}" > "${SSH_DIR}/id_rsa"
     chmod 400 "${SSH_DIR}/id_rsa"
-    if [ -n "${RSYNC_PORT}" ]; then
-        print_info "setup with ${RSYNC_PORT} port"
-        cat > ${SSH_DIR}/config <<-EOF
-Host ${RSYNC_HOST}
-    Port ${RSYNC_PORT}
-EOF
-    fi
 fi
 
 if [ -z "${RSYNC_ARG}" ]; then
@@ -57,8 +50,12 @@ if [ -z "${RSYNC_DIST_DIR}" ]; then
     exit 1
 fi
 
+if [ -z "${RSYNC_PORT}" ]; then
+    export RSYNC_PORT=22
+fi
+
 if [ -n "${RSYNC_PATH}" ]; then
-    rsync ${RSYNC_ARG} --rsync-path="${RSYNC_PATH}" ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR}
+    rsync ${RSYNC_ARG} -e "ssh -p ${RSYNC_PORT}" --rsync-path="${RSYNC_PATH}" ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR}
 else
-    rsync ${RSYNC_ARG} ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR}
+    rsync ${RSYNC_ARG} -e "ssh -p ${RSYNC_PORT}" ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR}
 fi
