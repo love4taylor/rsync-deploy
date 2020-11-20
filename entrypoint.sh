@@ -55,7 +55,7 @@ if [ -z "${RSYNC_DIST_DIR}" ]; then
 fi
 
 if [ -n "${RSYNC_PATH}" ]; then
-    rsync ${RSYNC_ARG} -e "ssh -p ${RSYNC_PORT}" --rsync-path="${RSYNC_PATH}" ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR}
+    rsync ${RSYNC_ARG} -e "ssh -o LogLevel=ERROR -p ${RSYNC_PORT}" --rsync-path="${RSYNC_PATH}" ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR}
 else
-    rsync ${RSYNC_ARG} -e "ssh -p ${RSYNC_PORT}" ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR}
+    rsync ${RSYNC_ARG} -e "ssh -o LogLevel=ERROR -p ${RSYNC_PORT}" ${GITHUB_WORKSPACE}/${PUBLISH_DIR} ${RSYNC_USERNAME}@${RSYNC_HOST}:${RSYNC_DIST_DIR}
 fi
